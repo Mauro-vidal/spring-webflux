@@ -1,0 +1,4 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb+srv://admin:<db_password>@webfluxcoursecluster.fkias.mongodb.net/webflux-course?retryWrites=true&w=majority&appName=WebfluxCourseCluster
