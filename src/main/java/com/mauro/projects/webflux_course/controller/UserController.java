@@ -1,5 +1,7 @@
 package com.mauro.projects.webflux_course.controller;
 
+import com.mauro.projects.webflux_course.model.request.UserRequest;
+import com.mauro.projects.webflux_course.model.response.UserResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
