@@ -4,6 +4,7 @@ import com.mauro.projects.webflux_course.controller.UserController;
 import com.mauro.projects.webflux_course.model.request.UserRequest;
 import com.mauro.projects.webflux_course.model.response.UserResponse;
 import com.mauro.projects.webflux_course.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ public class UserControllerImpl implements UserController {
     private final UserService service;
 
     @Override
-    public ResponseEntity<Mono<Void>> save(final UserRequest request) {
+    public ResponseEntity<Mono<Void>> save(final @Valid UserRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(service.save(request).then());
     }
