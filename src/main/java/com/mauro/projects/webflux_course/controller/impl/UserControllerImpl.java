@@ -1,6 +1,7 @@
 package com.mauro.projects.webflux_course.controller.impl;
 
 import com.mauro.projects.webflux_course.controller.UserController;
+import com.mauro.projects.webflux_course.mapper.UserMapper;
 import com.mauro.projects.webflux_course.model.request.UserRequest;
 import com.mauro.projects.webflux_course.model.response.UserResponse;
 import com.mauro.projects.webflux_course.service.UserService;
@@ -19,6 +20,7 @@ import reactor.core.publisher.Mono;
 public class UserControllerImpl implements UserController {
 
     private final UserService service;
+    private final UserMapper mapper;
 
     @Override
     public ResponseEntity<Mono<Void>> save(final @Valid UserRequest request) {
@@ -27,8 +29,8 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    public ResponseEntity<Mono<UserResponse>> find(String id) {
-        return null;
+    public ResponseEntity<Mono<UserResponse>> findById(String id) {
+        return ResponseEntity.ok(service.findById(id).map(mapper::toResponse));
     }
 
     @Override
