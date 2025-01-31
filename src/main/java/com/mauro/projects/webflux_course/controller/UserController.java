@@ -16,7 +16,7 @@ public interface UserController {
     @GetMapping(value = "/{id}")
     ResponseEntity<Mono<UserResponse>> findById(@PathVariable String id);
 
-    @GetMapping
+    @GetMapping("/all")
     ResponseEntity<Flux<UserResponse>> findAll();
 
     @PatchMapping(value = "/{id}")
