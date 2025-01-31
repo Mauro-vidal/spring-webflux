@@ -33,6 +33,7 @@ public class UserControllerImpl implements UserController {
         return ResponseEntity.ok(service.findById(id).map(mapper::toResponse));
     }
 
+
     @Override
     public ResponseEntity<Flux<UserResponse>> findAll() {
         return ResponseEntity.ok().body(
