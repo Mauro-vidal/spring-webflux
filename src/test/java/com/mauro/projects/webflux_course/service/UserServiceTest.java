@@ -39,8 +39,8 @@ class UserServiceTest {
         UserRequest request = new UserRequest("valdir", "valdir@mail.com", "123");
         User entity = User.builder().build();
 
-        Mockito.when(mapper.toEntity(ArgumentMatchers.any(UserRequest.class))).thenReturn(entity);
-        Mockito.when(repository.save(ArgumentMatchers.any(User.class))).thenReturn(Mono.just(User.builder().build()));
+        when(mapper.toEntity(ArgumentMatchers.any(UserRequest.class))).thenReturn(entity);
+        when(repository.save(ArgumentMatchers.any(User.class))).thenReturn(Mono.just(User.builder().build()));
 
         Mono<User> result = service.save(request);
 
@@ -49,7 +49,7 @@ class UserServiceTest {
                 .expectComplete()
                 .verify();
 
-        verify(repository, times(1)).save(ArgumentMatchers.any(User.class));
+        verify(repository, times(1)).save(any(User.class));
 
     }
 
@@ -85,9 +85,9 @@ class UserServiceTest {
         UserRequest request = new UserRequest("Mauro", "mauro@mail.com", "123");
         User entity = User.builder().build();
 
-        Mockito.when(mapper.toEntity(ArgumentMatchers.any(UserRequest.class), any(User.class))).thenReturn(entity);
-        Mockito.when(repository.findById(anyString())).thenReturn(Mono.just(entity));
-        Mockito.when(repository.save(ArgumentMatchers.any(User.class))).thenReturn(Mono.just(entity));
+        when(mapper.toEntity(any(UserRequest.class), any(User.class))).thenReturn(entity);
+        when(repository.findById(anyString())).thenReturn(Mono.just(entity));
+        when(repository.save(any(User.class))).thenReturn(Mono.just(entity));
 
         Mono<User> result = service.update("123", request);
 
@@ -96,7 +96,7 @@ class UserServiceTest {
                 .expectComplete()
                 .verify();
 
-        verify(repository, times(1)).save(ArgumentMatchers.any(User.class));
+        verify(repository, times(1)).save(any(User.class));
 
     }
 }
