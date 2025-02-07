@@ -14,6 +14,7 @@ import reactor.test.StepVerifier;
 
 import java.util.Objects;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -76,6 +77,26 @@ class UserServiceTest {
                 .verify();
 
         Mockito.verify(repository, times(1)).findAll();
+
+    }
+
+    @Test
+    void testUpdate() {
+        UserRequest request = new UserRequest("Mauro", "mauro@mail.com", "123");
+        User entity = User.builder().build();
+
+        Mockito.when(mapper.toEntity(ArgumentMatchers.any(UserRequest.class), any(User.class))).thenReturn(entity);
+        Mockito.when(repository.findById(anyString())).thenReturn(Mono.just(entity));
+        Mockito.when(repository.save(ArgumentMatchers.any(User.class))).thenReturn(Mono.just(entity));
+
+        Mono<User> result = service.update("123", request);
+
+        StepVerifier.create(result)
+                .expectNextMatches(Objects::nonNull)
+                .expectComplete()
+                .verify();
+
+        verify(repository, times(1)).save(ArgumentMatchers.any(User.class));
 
     }
 }
