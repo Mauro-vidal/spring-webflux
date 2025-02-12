@@ -78,6 +78,52 @@ class UserControllerImplTest {
     }
 
     @Test
+    @DisplayName("Test endpoint save with bad request for email invalid")
+    void TestSaveWithBadRequestEmailInvalid() {
+        final var request = new UserRequest("Mauro", " maurovidalmail.com", "123");
+
+        webTestClient.post().uri("/users")
+                .contentType(APPLICATION_JSON)
+                .body(fromValue(request))
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody()
+                .jsonPath("$.path").isEqualTo("/users")
+                .jsonPath("$.status").isEqualTo(BAD_REQUEST.value())
+                .jsonPath("$.error").isEqualTo("Validation Error")
+                .jsonPath("$.message").isEqualTo("Error on validation attributes")
+
+                .jsonPath("$.errors[0].fieldName").isEqualTo("email")
+                .jsonPath("$.errors[0].message").isEqualTo("invalid email")
+
+               .jsonPath("$.errors[1].fieldName").isEqualTo("email")
+               .jsonPath("$.errors[1].message").isEqualTo("field cannot have blank spaces at the beginning or at end");
+    }
+
+    @Test
+    @DisplayName("Test endpoint save with bad request for password invalid")
+    void TestSaveWithBadRequestPasswordInvalid() {
+        final var request = new UserRequest("Mauro", "maurovidal@mail.com", " 3");
+
+        webTestClient.post().uri("/users")
+                .contentType(APPLICATION_JSON)
+                .body(fromValue(request))
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody()
+                .jsonPath("$.path").isEqualTo("/users")
+                .jsonPath("$.status").isEqualTo(BAD_REQUEST.value())
+                .jsonPath("$.error").isEqualTo("Validation Error")
+                .jsonPath("$.message").isEqualTo("Error on validation attributes")
+
+                .jsonPath("$.errors[0].fieldName").isEqualTo("password")
+                .jsonPath("$.errors[0].message").isEqualTo("field cannot have blank spaces at the beginning or at end")
+
+                .jsonPath("$.errors[1].fieldName").isEqualTo("password")
+                .jsonPath("$.errors[1].message").isEqualTo("must be between 3 and 50 characters");
+    }
+
+    @Test
     void findById() {
     }
 
