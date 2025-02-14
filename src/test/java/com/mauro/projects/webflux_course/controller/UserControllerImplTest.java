@@ -5,6 +5,7 @@ import com.mauro.projects.webflux_course.mapper.UserMapper;
 import com.mauro.projects.webflux_course.model.request.UserRequest;
 import com.mauro.projects.webflux_course.model.response.UserResponse;
 import com.mauro.projects.webflux_course.service.UserService;
+import com.mauro.projects.webflux_course.service.exception.ObjectNotFoundException;
 import com.mongodb.reactivestreams.client.MongoClient;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -261,6 +262,28 @@ class UserControllerImplTest {
                 .expectStatus().isOk();
 
         verify(service).delete(anyString());
+
+    }
+
+    @Test
+    @DisplayName("Test delete endpoint with not found")
+    void testDeleteWithNotFound() {
+
+        final var expectedMessage = format("Object not found. Id: %s, Type: %s", ID, User.class.getSimpleName());
+
+
+        when(service.delete(anyString())).thenThrow(new ObjectNotFoundException(expectedMessage));
+
+        webTestClient.delete().uri("/users/" + ID)
+                .exchange()
+                .expectStatus()
+                .isNotFound()
+                .expectBody()
+                        .jsonPath("$.path").isEqualTo("/users/" + ID)
+                        .jsonPath("$.status").isEqualTo(NOT_FOUND.value())
+                        .jsonPath("$.error").isEqualTo("Not Found")
+                        .jsonPath("$.message").isEqualTo(expectedMessage);
+
 
     }
 }
