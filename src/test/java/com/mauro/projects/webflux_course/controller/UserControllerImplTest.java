@@ -252,6 +252,26 @@ class UserControllerImplTest {
     }
 
     @Test
+    @DisplayName("Test update endpoint with not found")
+    void testUpdateWithNotFound() {
+        final var expectedMessage = format("Object not found. Id: %s, Type: %s", ID, User.class.getSimpleName());
+        final var request = new UserRequest(NAME, EMAIL, PASSWORD);
+
+        when(service.update(anyString(), any(UserRequest.class)))
+                .thenThrow(new ObjectNotFoundException(expectedMessage));
+
+        webTestClient.patch().uri("users/" + ID)
+                .contentType(APPLICATION_JSON)
+                .body(fromValue(request))
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectBody()
+                .jsonPath("$.path").isEqualTo("users/" + ID)
+                .jsonPath("$.status").isEqualTo(NOT_FOUND.value())
+                .jsonPath("$.error").isEqualTo("Not Found");
+    }
+
+    @Test
     @DisplayName("Test delete endpoint with success")
     void testDeleteWithSuccess() {
 
