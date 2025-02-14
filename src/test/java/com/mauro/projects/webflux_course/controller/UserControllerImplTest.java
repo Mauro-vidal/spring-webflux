@@ -3,6 +3,7 @@ package com.mauro.projects.webflux_course.controller;
 import com.mauro.projects.webflux_course.entity.User;
 import com.mauro.projects.webflux_course.mapper.UserMapper;
 import com.mauro.projects.webflux_course.model.request.UserRequest;
+import com.mauro.projects.webflux_course.model.response.UserResponse;
 import com.mauro.projects.webflux_course.service.UserService;
 import com.mongodb.reactivestreams.client.MongoClient;
 import org.junit.jupiter.api.DisplayName;
@@ -124,7 +125,27 @@ class UserControllerImplTest {
     }
 
     @Test
-    void findById() {
+    @DisplayName("Test find by id endpoint with success")
+    void TestFindByIdWithSuccess() {
+        final var id = "123456";
+        final var name = "Mauro";
+        final var email = "maurovidal@mail.com";
+        final var password = "123";
+        final var userResponse = new UserResponse(id, name, email, password);
+
+        when(service.findById(anyString())).thenReturn(just(User.builder().build()));
+        when(mapper.toResponse(any(User.class))).thenReturn(userResponse);
+
+        webTestClient.get().uri("/users/" + id)
+                .accept(APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.id").isEqualTo(id)
+                .jsonPath("$.name").isEqualTo(name)
+                .jsonPath("$.email").isEqualTo(email)
+                .jsonPath("$.password").isEqualTo(password);
+
     }
 
     @Test
