@@ -1,10 +1,12 @@
 package com.mauro.projects.webflux_course.controller.impl;
 
 import com.mauro.projects.webflux_course.controller.UserController;
+import com.mauro.projects.webflux_course.entity.User;
 import com.mauro.projects.webflux_course.mapper.UserMapper;
 import com.mauro.projects.webflux_course.model.request.UserRequest;
 import com.mauro.projects.webflux_course.model.response.UserResponse;
 import com.mauro.projects.webflux_course.service.UserService;
+import com.mauro.projects.webflux_course.service.exception.ObjectNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import static java.lang.String.format;
 
 @RestController
 @RequestMapping(value = "/users")
@@ -30,7 +34,16 @@ public class UserControllerImpl implements UserController {
 
     @Override
     public ResponseEntity<Mono<UserResponse>> findById(String id) {
-        return ResponseEntity.ok(service.findById(id).map(mapper::toResponse));
+        return ResponseEntity.ok(handleNotFound(service.findById(id), id).map(mapper::toResponse));
+    }
+
+
+    private <T> Mono<T> handleNotFound(Mono<T> mono, String id) {
+        return mono.switchIfEmpty(Mono.error(
+                new ObjectNotFoundException(
+                        format("Object not found. Id: %s, Type: %s", id, User.class.getSimpleName())
+                )
+        ));
     }
 
 

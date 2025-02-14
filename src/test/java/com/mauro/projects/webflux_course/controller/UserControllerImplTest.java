@@ -18,11 +18,14 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 
 
+import static java.lang.String.format;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.web.reactive.function.BodyInserters.fromValue;
+import static reactor.core.publisher.Mono.empty;
 import static reactor.core.publisher.Mono.just;
 
 @ExtendWith(SpringExtension.class)
@@ -154,6 +157,28 @@ class UserControllerImplTest {
                 .jsonPath("$.password").isEqualTo(PASSWORD);
 
     }
+
+    @Test
+    @DisplayName("Test find by id endpoint with object not found")
+    void TestFindByIdWithObjectNotFound() {
+        final var id = "12345";
+
+        // Simula que o serviço retornará Mono.empty() quando o objeto não for encontrado
+        when(service.findById(id)).thenReturn(empty());
+
+        webTestClient.get().uri("/users/" + id)
+                .accept(APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isNotFound()  // Verifica se o status HTTP 404 é retornado
+                .expectBody()
+                .jsonPath("$.path").isEqualTo("/users/" + id)
+                .jsonPath("$.status").isEqualTo(NOT_FOUND.value())
+                .jsonPath("$.error").isEqualTo("Not Found")
+                .jsonPath("$.message").isEqualTo(format("Object not found. Id: %s, Type: %s", id, User.class.getSimpleName()));
+    }
+
+
+
 
     @Test
     void findAll() {
