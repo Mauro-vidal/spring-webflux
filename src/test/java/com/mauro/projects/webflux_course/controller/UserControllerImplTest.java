@@ -200,6 +200,25 @@ class UserControllerImplTest {
     }
 
     @Test
+    @DisplayName("Test find by id endpoint with success")
+    void testFindAllWithNotFound() {
+        final var userResponse = new UserResponse(ID, NAME, EMAIL, PASSWORD);
+
+        when(service.findAll()).thenReturn(Flux.just(User.builder().build()));
+        when(mapper.toResponse(any(User.class))).thenReturn(userResponse);
+
+        webTestClient.get().uri("/users/")
+                .accept(APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectBody()
+                .jsonPath("$.path").isEqualTo("/users/")
+                .jsonPath("$.status").isEqualTo(NOT_FOUND.value())
+                .jsonPath("$.error").isEqualTo("Not Found")
+                .jsonPath("$.message").isEmpty();
+    }
+
+    @Test
     void update() {
     }
 
