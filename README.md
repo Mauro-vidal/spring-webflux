@@ -149,21 +149,5 @@ Os erros são tratados com mensagens claras, como o seguinte exemplo para `Objec
 }
 ```
 
-## 👨‍💻 Contribuição
-
-Contribuições são bem-vindas! Siga os passos abaixo:
-
-1. Fork o repositório
-2. Crie uma branch com sua feature ou correção: `git checkout -b feature/nova-feature`
-3. Faça as alterações necessárias e commit: `git commit -m "Descrição clara da mudança"`
-4. Faça o push: `git push origin feature/nova-feature`
-5. Abra um Pull Request
-
-## 📄 Licença
-
-Este projeto está licenciado sob a licença MIT.
-
----
-
 💡 *Desenvolvido com dedicação e código limpo*
 
