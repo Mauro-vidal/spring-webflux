@@ -69,6 +69,40 @@ POST /users
 }
 ```
 
+**Exemplo de Erro de Validação:**
+
+```json
+{
+    "timestamp": "17/02/2025 14:22:58",
+    "path": "/users",
+    "status": 400,
+    "error": "Validation Error",
+    "message": "Error on validation attributes",
+    "errors": [
+        {
+            "fieldName": "email",
+            "message": "field cannot have blank spaces at the beginning or at end"
+        },
+        {
+            "fieldName": "name",
+            "message": "field cannot have blank spaces at the beginning or at end"
+        },
+        {
+            "fieldName": "password",
+            "message": "field cannot have blank spaces at the beginning or at end"
+        },
+        {
+            "fieldName": "email",
+            "message": "invalid email"
+        },
+        {
+            "fieldName": "password",
+            "message": "must be between 3 and 50 characters"
+        }
+    ]
+}
+```
+
 ### 2. Buscar Usuário por ID (GET)
 
 ```http
